@@ -16,4 +16,4 @@ before_install:
     - sudo docker pull centos:centos${OS_VERSION}
 
 script:
-    - test-setup.sh ${OS_VERSION}
+    - ./test-setup.sh ${OS_VERSION}
