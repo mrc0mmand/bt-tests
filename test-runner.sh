@@ -11,10 +11,11 @@ TESTS=(
 )
 
 for test in ${TESTS[@]}; do
+    TESTPATH="/workspace/$test"
     echo "Running test: $test"
     echo "--------------------------------------"
-    chmod +x $test
-    TERM=dumb ./$test
+    chmod +x $TESTPATH
+    TERM=dumb ./$TESTPATH
     if [[ $? -ne 0 ]]; then
         EC=1
     fi
