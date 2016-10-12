@@ -22,4 +22,4 @@ for test in ${TESTS[@]}; do
     echo -e "\n"
 done
 
-return $EC
+exit $EC
