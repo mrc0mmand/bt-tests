@@ -21,6 +21,7 @@ rlJournalStart
     rlPhaseStartCleanup
         rlRun "popd"
         rlRun "rm -r $TmpDir" 0 "Removing tmp directory"
+        rlFail "Example fail"
     rlPhaseEnd
 rlJournalPrintText
 rlJournalEnd
