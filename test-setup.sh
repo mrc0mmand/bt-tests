@@ -8,7 +8,7 @@ fi
 OS_VERSION=$1
 CONT_NAME="centos-7-tests"
 
-sudo docker run -d --name "$CONT_NAME" \
+sudo docker run --rm --name "$CONT_NAME" \
                 -v $PWD:/workspace:rw \
-                --rm centos:centos${OS_VERSION} \
+                centos:centos${OS_VERSION} \
                 /bin/bash -c "bash -xe /workspace/test-runner.sh" 
