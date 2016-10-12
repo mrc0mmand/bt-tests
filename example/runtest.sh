@@ -3,6 +3,7 @@
 # Include Beaker environment
 . /usr/share/beakerlib/beakerlib.sh || exit 1
 
+TEST="/example/sanity"
 PACKAGE="openssl"
 
 rlJournalStart
@@ -21,7 +22,6 @@ rlJournalStart
     rlPhaseStartCleanup
         rlRun "popd"
         rlRun "rm -r $TmpDir" 0 "Removing tmp directory"
-        rlFail "Example fail"
     rlPhaseEnd
 rlJournalPrintText
 rlJournalEnd
