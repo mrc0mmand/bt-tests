@@ -22,5 +22,5 @@ ls -la $CERTGEN_PATH
 
 sudo docker run --rm --name "$CONT_NAME" \
                 -v $PWD:/workspace:rw \
-                ${OS_TYPE}:${OS_TYPE}${OS_VERSION} \
+                ${OS_TYPE}:${OS_VERSION} \
                 /bin/bash -c "bash -xe /workspace/test-runner.sh"
