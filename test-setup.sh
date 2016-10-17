@@ -19,7 +19,7 @@ cp -a "$TMP_DIR/certgen/." "$CERTGEN_PATH/"
 ls -la $CERTGEN_PATH
 
 # TEST
-reboot
+sudo reboot
 # TEST
 
 sudo docker run --rm --name "$CONT_NAME" \
