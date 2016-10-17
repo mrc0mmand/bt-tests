@@ -8,7 +8,7 @@ fi
 OS_VERSION=$1
 CONT_NAME="centos-${1}-tests"
 CERTGEN_REPO="https://github.com/redhat-qe-security/certgen"
-CERTGEN_PATH="utils/openssl/Library/certgen"
+CERTGEN_PATH="openssl/Library/certgen"
 
 # Prepare necessary libraries
 TMP_DIR="$(mktemp -d tmp.XXXXX)"
