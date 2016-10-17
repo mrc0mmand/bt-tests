@@ -18,10 +18,6 @@ ls -la $TMP_DIR
 cp -a "$TMP_DIR/certgen/." "$CERTGEN_PATH/"
 ls -la $CERTGEN_PATH
 
-# TEST
-sudo reboot
-# TEST
-
 sudo docker run --rm --name "$CONT_NAME" \
                 -v $PWD:/workspace:rw \
                 centos:centos${OS_VERSION} \
