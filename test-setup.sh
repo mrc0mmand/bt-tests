@@ -1,11 +1,13 @@
 #!/bin/bash -x
 
-if [[ -z $1 ]]; then
-    echo >&2 "Missing OS version"
+if [[ $# < 3 ]]; then
+    echo >&2 "Missing arguments"
     exit 1
 fi
 
-OS_VERSION=$1
+COMPONENT="$1"
+OS_TYPE="$2"
+OS_VERSION="$3"
 CONT_NAME="centos-${1}-tests"
 CERTGEN_REPO="https://github.com/redhat-qe-security/certgen"
 CERTGEN_PATH="openssl/Library/certgen"
@@ -20,5 +22,5 @@ ls -la $CERTGEN_PATH
 
 sudo docker run --rm --name "$CONT_NAME" \
                 -v $PWD:/workspace:rw \
-                centos:centos${OS_VERSION} \
+                ${OS_TYPE}:${OS_TYPE}${OS_VERSION} \
                 /bin/bash -c "bash -xe /workspace/test-runner.sh"
