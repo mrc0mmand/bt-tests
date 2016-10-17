@@ -9,7 +9,7 @@ yum -y install beakerlib
 EC=0
 TESTS=(
     "example/runtest.sh"
-    "tests/openssl/CC-openssl-with-gnutls/runtest.sh"
+    "openssl/Interoperability/CC-openssl-with-gnutls/runtest.sh"
 )
 
 for test in ${TESTS[@]}; do
