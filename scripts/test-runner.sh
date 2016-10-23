@@ -46,7 +46,7 @@ while read test; do
     # Works only for beakerlib tests
     make run
     if [[ $? -ne 0 ]]; then
-        FAILED+=("test")
+        FAILED+=("$test")
         EC=1
     fi
     popd
