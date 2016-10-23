@@ -18,6 +18,7 @@ yum -y install openssl nss gnutls net-tools coreutils gawk \
                gnutls-utils expect make beakerlib findutils
 
 EC=0
+FAILED=()
 
 export PATH=${PATH}:/workspace/scripts
 
@@ -45,9 +46,13 @@ while read test; do
     # Works only for beakerlib tests
     make run
     if [[ $? -ne 0 ]]; then
+        FAILED+=("test")
         EC=1
     fi
     popd
 done <<< "$(find /workspace -type f ! -path "*/Library/*" -name "runtest.sh")"
+
+echo "Failed tests:"
+printf '%s\n' "${FAILED[@]}"
 
 exit $EC
