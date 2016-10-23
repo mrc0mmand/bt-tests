@@ -1,8 +1,5 @@
 #!/bin/bash
 
-echo "DEBUG: $OS_TYPE $OS_VERSION $COMP"
-
-
 if [[ $# < 2 ]]; then
     echo >&2 "Missing arguments"
     exit 1
@@ -24,6 +21,7 @@ yum -y install openssl nss gnutls net-tools coreutils gawk \
 EC=0
 EXECUTED=()
 FAILED=()
+SKIPPED=()
 
 export PATH=${PATH}:/workspace/scripts
 export TERM=xterm
@@ -37,12 +35,14 @@ do
     pushd "$(dirname "$test")"
     if [[ ! -f Makefile ]]; then
         echo >&2 "Missing Makefile"
+        SKIPPED+=("$test")
         EC=1
         continue
     fi
     # Check relevancy
     if ! relevancy.awk -v os_type=$OS_TYPE -v os_ver=$OS_VERSION Makefile; then
         echo "This test is not relevant for current release"
+        SKIPPED+=("$test")
         continue
     fi
     # Install test dependencies
@@ -63,6 +63,8 @@ do
     EXECUTED+=("$test")
     echo "travis_fold:end:runtest.sh"
 done
+
+set +x
 
 echo "Executed tests:"
 printf '%s\n' "${EXECUTED[@]}"
