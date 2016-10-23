@@ -20,6 +20,7 @@ yum -y install openssl nss gnutls net-tools coreutils gawk \
 
 EC=0
 CONT=0
+INDEX=0
 EXECUTED=()
 FAILED=()
 SKIPPED=()
@@ -32,13 +33,14 @@ echo "travis_fold:end:machine-setup"
 for test in $(find /workspace -type f ! -path "*/Library/*" -name "runtest.sh");
 do
     if [[ $CONT -ne 0 ]]; then
-        echo "travis_fold:end:runtest.sh"
         SKIPPED+=("$test")
         popd
         CONT=0
+        echo "travis_fold:end:runtest.sh.$INDEX"
     fi
 
-    echo "travis_fold:start:runtest.sh"
+    $((INDEX++))
+    echo "travis_fold:start:runtest.sh.$INDEX"
     echo "Running test: $test"
     pushd "$(dirname "$test")"
     if [[ ! -f Makefile ]]; then
