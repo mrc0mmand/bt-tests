@@ -29,9 +29,9 @@ echo "travis_fold:end:machine-setup"
 
 printf %s\n\n "$-"
 
-while read test; do
-    TEST_NAME="$(basename "$test")"
-    echo "travis_fold:start:$TEST_NAME"
+for test in $(find /workspace -type f ! -path "*/Library/*" -name "runtest.sh");
+do
+    echo "travis_fold:start:runtest.sh"
     echo "Running test: $test"
     pushd "$(dirname "$test")"
     if [[ ! -f Makefile ]]; then
@@ -60,8 +60,8 @@ while read test; do
     fi
     popd
     EXECUTED+=("$test")
-    echo "travis_fold:end:$TEST_NAME"
-done <<< "$(find /workspace -type f ! -path "*/Library/*" -name "runtest.sh")"
+    echo "travis_fold:end:runtest.sh"
+done
 
 echo "Executed tests:"
 printf '%s\n' "${EXECUTED[@]}"
