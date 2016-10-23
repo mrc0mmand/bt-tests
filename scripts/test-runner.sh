@@ -19,7 +19,7 @@ yum -y install openssl nss gnutls net-tools coreutils gawk \
                gnutls-utils expect make beakerlib findutils
 
 EC=0
-CONT=0
+SKIP=0
 INDEX=0
 EXECUTED=()
 FAILED=()
@@ -31,46 +31,47 @@ echo "travis_fold:end:machine-setup"
 
 for test in $(find /workspace -type f ! -path "*/Library/*" -name "runtest.sh");
 do
-    if [[ $CONT -ne 0 ]]; then
-        SKIPPED+=("$test")
-        popd
-        CONT=0
-        echo "travis_fold:end:runtest.sh.$INDEX"
-    fi
-
+    SKIP=0
     ((INDEX++))
+
     echo "travis_fold:start:runtest.sh.$INDEX"
     echo "Running test: $test"
     pushd "$(dirname "$test")"
     if [[ ! -f Makefile ]]; then
         echo >&2 "Missing Makefile"
         EC=1
-        CONT=1
-        continue
+        SKIP=1
     fi
-    # Check relevancy
-    if ! relevancy.awk -v os_type=$OS_TYPE -v os_ver=$OS_VERSION Makefile; then
-        echo "This test is not relevant for current release"
-        CONT=1
-        continue
-    fi
-    # Install test dependencies
-    DEPS="$(awk '
-        match($0, /\"Requires:[[:space:]]*(.*)\"/, m) {
-            print m[1];
-        }' Makefile)"
-    if [[ ! -z $DEPS ]]; then
-        yum -y install $DEPS
-    fi
-    # Works only for beakerlib tests
-    make run
-    if [[ $? -ne 0 ]]; then
-        FAILED+=("$test")
-        EC=1
+    if [[ $SKIP -eq 0 ]]; then
+        # Check relevancy
+        if relevancy.awk -v os_type=$OS_TYPE -v os_ver=$OS_VERSION Makefile; then
+            # Install test dependencies
+            DEPS="$(awk '
+                match($0, /\"Requires:[[:space:]]*(.*)\"/, m) {
+                    print m[1];
+                }' Makefile)"
+            if [[ ! -z $DEPS ]]; then
+                yum -y install $DEPS
+            fi
+            # Works only for beakerlib tests
+            make run
+            if [[ $? -ne 0 ]]; then
+                FAILED+=("$test")
+                EC=1
+            fi
+        else
+            echo "This test is not relevant for current release"
+            SKIP=1
+        fi
     fi
     popd
-    EXECUTED+=("$test")
-    echo "travis_fold:end:runtest.sh"
+
+    if [[ $SKIP -eq 0 ]]; then
+        EXECUTED+=("$test")
+    else
+        SKIPPED+=("$test")
+    fi
+    echo "travis_fold:end:runtest.sh.$INDEX"
 done
 
 set +x
