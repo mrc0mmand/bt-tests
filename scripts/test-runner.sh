@@ -1,5 +1,8 @@
 #!/bin/bash
 
+echo "DEBUG: $OS_TYPE $OS_VERSION $COMP"
+
+
 if [[ $# < 2 ]]; then
     echo >&2 "Missing arguments"
     exit 1
@@ -26,8 +29,6 @@ export PATH=${PATH}:/workspace/scripts
 export TERM=xterm
 
 echo "travis_fold:end:machine-setup"
-
-printf %s\n\n "$-"
 
 for test in $(find /workspace -type f ! -path "*/Library/*" -name "runtest.sh");
 do
