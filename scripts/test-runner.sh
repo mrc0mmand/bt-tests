@@ -23,12 +23,11 @@ export PATH=${PATH}:/workspace/scripts
 
 while read test; do
     echo "Running test: $test"
-    echo "--------------------------------------"
     pushd "$(dirname "$test")"
     # Check relevancy
     if ! relevancy.awk -v os_type=$OS_TYPE -v os_ver=$OS_VERSION Makefile; then
-        echo "Current test is not relevant for this release"
-        continue;
+        echo "This test is not relevant for current release"
+        continue
     fi
     # Works only for beakerlib tests
     make run
