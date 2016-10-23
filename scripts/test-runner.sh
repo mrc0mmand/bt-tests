@@ -19,6 +19,7 @@ yum -y install openssl nss gnutls net-tools coreutils gawk \
                gnutls-utils expect make beakerlib findutils
 
 EC=0
+CONT=0
 EXECUTED=()
 FAILED=()
 SKIPPED=()
@@ -30,19 +31,26 @@ echo "travis_fold:end:machine-setup"
 
 for test in $(find /workspace -type f ! -path "*/Library/*" -name "runtest.sh");
 do
+    if [[ $CONT -ne 0 ]]; then
+        echo "travis_fold:end:runtest.sh"
+        SKIPPED+=("$test")
+        popd
+        CONT=0
+    fi
+
     echo "travis_fold:start:runtest.sh"
     echo "Running test: $test"
     pushd "$(dirname "$test")"
     if [[ ! -f Makefile ]]; then
         echo >&2 "Missing Makefile"
-        SKIPPED+=("$test")
         EC=1
+        CONT=1
         continue
     fi
     # Check relevancy
     if ! relevancy.awk -v os_type=$OS_TYPE -v os_ver=$OS_VERSION Makefile; then
         echo "This test is not relevant for current release"
-        SKIPPED+=("$test")
+        CONT=1
         continue
     fi
     # Install test dependencies
