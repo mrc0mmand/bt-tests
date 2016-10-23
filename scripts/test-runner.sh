@@ -26,7 +26,6 @@ FAILED=()
 SKIPPED=()
 
 export PATH=${PATH}:/workspace/scripts
-export TERM=xterm
 
 echo "travis_fold:end:machine-setup"
 
@@ -39,7 +38,7 @@ do
         echo "travis_fold:end:runtest.sh.$INDEX"
     fi
 
-    $((INDEX++))
+    ((INDEX++))
     echo "travis_fold:start:runtest.sh.$INDEX"
     echo "Running test: $test"
     pushd "$(dirname "$test")"
