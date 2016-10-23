@@ -19,9 +19,9 @@ BEGIN {
     print "Checking relevancy for " os_type " " os_ver;
 }
 
-match($0, /\"Releases:\s*(.*)\"/, m) {
+match($0, /\"Releases:[[:space:]]*(.*)\"/, m) {
     print $0
-    split(m[1], items, /\s+/);
+    split(m[1], items, /[[:space:]]+/);
     for(i in items)
         print items[i]
 }
