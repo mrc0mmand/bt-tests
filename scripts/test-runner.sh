@@ -9,12 +9,11 @@ yum -y install beakerlib
 EC=0
 
 while read test; do
-    TESTPATH="/workspace/$test"
     echo "Running test: $test"
     echo "--------------------------------------"
-    chmod +x "$TESTPATH"
-    pushd "$(dirname "$TESTPATH")"
-    "$TESTPATH"
+    pushd "$(dirname "$test")"
+    # Works only for beakerlib tests
+    make run
     if [[ $? -ne 0 ]]; then
         EC=1
     fi
