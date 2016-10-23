@@ -15,7 +15,7 @@ if [[ $OS_TYPE != "fedora" ]]; then
 fi
 
 yum -y install openssl nss gnutls net-tools coreutils \
-               gnutls-utils expect make beakerlib
+               gnutls-utils expect make beakerlib findutils
 
 EC=0
 
@@ -30,6 +30,6 @@ while read test; do
     fi
     echo -e "\n"
     popd
-done <<< "$(find /workspace -type f -name "runtest.sh")"
+done <<< "$(find /workspace -type f ! -path "*/Library/*" -name "runtest.sh")"
 
 exit $EC
