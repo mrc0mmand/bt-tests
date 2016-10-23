@@ -26,7 +26,7 @@ while read test; do
     echo "--------------------------------------"
     pushd "$(dirname "$test")"
     # Check relevancy
-    if ! relevancy.awk -v os_type=$OS_TYPE os_ver=$OS_VERSION Makefile; then
+    if ! relevancy.awk -v os_type=$OS_TYPE -v os_ver=$OS_VERSION Makefile; then
         echo "Current test is not relevant for this release"
         continue;
     fi
