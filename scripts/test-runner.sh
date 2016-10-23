@@ -3,7 +3,7 @@
 yum -y makecache
 # TODO: epel-release is not in fedora
 yum -y install epel-release openssl nss gnutls net-tools coreutils \
-               gnutls-utils expect
+               gnutls-utils expect make
 yum -y install beakerlib
 
 EC=0
