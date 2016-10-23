@@ -8,6 +8,7 @@ fi
 OS_TYPE="$1"
 OS_VERSION="$2"
 
+echo "travis_fold:start:machine-setup"
 yum -y makecache
 # epel-release is not available on fedora
 if [[ $OS_TYPE != "fedora" ]]; then
@@ -23,7 +24,11 @@ FAILED=()
 
 export PATH=${PATH}:/workspace/scripts
 
+echo "travis_fold:end:machine-setup"
+
 while read test; do
+    TEST_NAME="$(basename "$test")"
+    echo "travis_fold:start:$TEST_NAME"
     echo "Running test: $test"
     pushd "$(dirname "$test")"
     if [[ ! -f Makefile ]]; then
@@ -52,6 +57,7 @@ while read test; do
     fi
     popd
     EXECUTED+=("$test")
+    echo "travis_fold:end:$TEST_NAME"
 done <<< "$(find /workspace -type f ! -path "*/Library/*" -name "runtest.sh")"
 
 echo "Executed tests:"
