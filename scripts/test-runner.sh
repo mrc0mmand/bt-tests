@@ -66,8 +66,13 @@ done
 
 set +x
 
+echo "RESULTS:"
+
 echo "Executed tests:"
 printf '%s\n' "${EXECUTED[@]}"
+
+echo "Skipped tests:"
+printf '%s\n' "${SKIPPED[@]}"
 
 echo "Failed tests:"
 printf '%s\n' "${FAILED[@]}"
