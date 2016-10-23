@@ -20,6 +20,6 @@ while read test; do
     fi
     echo -e "\n"
     popd
-done <<< "$(find . -type f -name "runtest.sh")"
+done <<< "$(find /workspace -type f -name "runtest.sh")"
 
 exit $EC
