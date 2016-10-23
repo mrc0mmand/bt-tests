@@ -14,7 +14,7 @@ if [[ $OS_TYPE != "fedora" ]]; then
     yum -y install epel-release
 fi
 
-yum -y install openssl nss gnutls net-tools coreutils \
+yum -y install openssl nss gnutls net-tools coreutils gawk \
                gnutls-utils expect make beakerlib findutils
 
 EC=0

@@ -1,4 +1,4 @@
-#!/bin/awk -f
+#!/bin/gawk -f
 
 function release_subst(rel) {
     rel = tolower(rel);
