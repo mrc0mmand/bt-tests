@@ -22,10 +22,11 @@ rm -fr "$TMP_DIR"
 # fake distribution/fips (at least for now)
 LIB_PATH="distribution/Library/fips"
 mkdir -p "$LIB_PATH"
-echo "fipsLibraryLoaded() { return 0; }" > "$LIB_PATH/lib.sh"
+echo "# library-prefix = fips" > "$LIB_PATH/lib.sh"
+echo "fipsLibraryLoaded() { return 0; }" >> "$LIB_PATH/lib.sh"
 
 sudo docker run --rm --name "$CONT_NAME" \
                 -v $PWD:/workspace:rw \
                 ${OS_TYPE}:${OS_VERSION} \
                 /bin/bash -c \
-                "bash -xe /workspace/scripts/test-runner.sh $OS_TYPE $OS_VERSION"
+                "bash -x /workspace/scripts/test-runner.sh $OS_TYPE $OS_VERSION"
