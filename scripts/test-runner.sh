@@ -23,8 +23,11 @@ EXECUTED=()
 FAILED=()
 
 export PATH=${PATH}:/workspace/scripts
+export TERM=xterm
 
 echo "travis_fold:end:machine-setup"
+
+printf %s\n\n "$-"
 
 while read test; do
     TEST_NAME="$(basename "$test")"
