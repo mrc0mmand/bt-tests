@@ -18,7 +18,7 @@ TMP_DIR="$(mktemp -d tmp.XXXXX)"
 mkdir -p "$CERTGEN_PATH"
 git clone "$CERTGEN_REPO" "$TMP_DIR"
 cp -a "$TMP_DIR/certgen/." "$CERTGEN_PATH/"
-rm -fr "$CERTGEN_PATH"
+rm -fr "$TMP_DIR"
 
 sudo docker run --rm --name "$CONT_NAME" \
                 -v $PWD:/workspace:rw \
