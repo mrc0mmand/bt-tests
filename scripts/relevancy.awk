@@ -20,12 +20,15 @@ BEGIN {
 }
 
 match($0, /\"Releases:\s*(.*)\"/, m) {
+    print $0
     split(m[1], items, /\s+/);
+    for(i in items)
+        print items[i]
 }
 
 END {
     for(i in items) {
-        if(match(items[i], /([-])?([^0-9]+)([0-9]+)/, release)) {
+        if(match(items[i], /^([-])?([^0-9]+)([0-9]+)$/, release)) {
             exclude = (release[1] != "") ? 1 : 0;
             rel_type = release_subst(release[2]);
             rel_ver = release[3];
