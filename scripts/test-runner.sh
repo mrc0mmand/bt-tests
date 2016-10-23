@@ -1,10 +1,21 @@
 #!/bin/bash
 
+if [[ $# < 2 ]]; then
+    echo >&2 "Missing arguments"
+    exit 1
+fi
+
+OS_TYPE="$1"
+OS_VERSION="$2"
+
 yum -y makecache
-# TODO: epel-release is not in fedora
-yum -y install epel-release openssl nss gnutls net-tools coreutils \
-               gnutls-utils expect make
-yum -y install beakerlib
+# epel-release is not available on fedora
+if [[ $OS_TYPE != "fedora" ]]; then
+    yum -y install epel-release
+fi
+
+yum -y install openssl nss gnutls net-tools coreutils \
+               gnutls-utils expect make beakerlib
 
 EC=0
 
