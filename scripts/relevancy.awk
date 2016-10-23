@@ -20,10 +20,7 @@ BEGIN {
 }
 
 match($0, /\"Releases:[[:space:]]*(.*)\"/, m) {
-    print $0
     split(m[1], items, /[[:space:]]+/);
-    for(i in items)
-        print items[i]
 }
 
 END {
