@@ -8,11 +8,12 @@ fi
 COMPONENT="$1"
 OS_TYPE="$2"
 OS_VERSION="$3"
-CONT_NAME="centos-${1}-tests"
+CONT_NAME="${OS_TYPE}-${OS_VERSION}-${COMPONENT}"
 CERTGEN_REPO="https://github.com/redhat-qe-security/certgen"
 CERTGEN_PATH="openssl/Library/certgen"
 
 # Prepare necessary libraries
+# openssl/certgen:
 TMP_DIR="$(mktemp -d tmp.XXXXX)"
 mkdir -p "$CERTGEN_PATH"
 git clone "$CERTGEN_REPO" "$TMP_DIR"
@@ -23,4 +24,4 @@ ls -la $CERTGEN_PATH
 sudo docker run --rm --name "$CONT_NAME" \
                 -v $PWD:/workspace:rw \
                 ${OS_TYPE}:${OS_VERSION} \
-                /bin/bash -c "bash -xe /workspace/test-runner.sh"
+                /bin/bash -c "bash -xe /workspace/scripts/test-runner.sh"

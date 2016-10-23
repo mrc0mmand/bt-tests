@@ -7,12 +7,8 @@ yum -y install epel-release openssl nss gnutls net-tools coreutils \
 yum -y install beakerlib
 
 EC=0
-TESTS=(
-    "example/runtest.sh"
-    "openssl/Interoperability/CC-openssl-with-gnutls/runtest.sh"
-)
 
-for test in ${TESTS[@]}; do
+while read test; do
     TESTPATH="/workspace/$test"
     echo "Running test: $test"
     echo "--------------------------------------"
@@ -24,6 +20,6 @@ for test in ${TESTS[@]}; do
     fi
     echo -e "\n"
     popd
-done
+done <<< "$(find . -type f -name "runtest.sh")"
 
 exit $EC

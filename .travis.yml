@@ -15,4 +15,4 @@ before_install:
     - sudo docker pull ${OS_TYPE}:${OS_VERSION}
 
 script:
-    - ./test-setup.sh ${TYPE} ${OS_TYPE} ${OS_VERSION}
+    - ./scripts/test-setup.sh ${TYPE} ${OS_TYPE} ${OS_VERSION}
