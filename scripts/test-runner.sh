@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set +x
+
 if [[ $# < 2 ]]; then
     echo >&2 "Missing arguments"
     exit 1
@@ -31,10 +33,10 @@ echo "travis_fold:end:machine-setup"
 
 for test in $(find /workspace -type f ! -path "*/Library/*" -name "runtest.sh");
 do
+    echo "travis_fold:start:runtest.sh.$INDEX"
     SKIP=0
     ((INDEX++))
 
-    echo "travis_fold:start:runtest.sh.$INDEX"
     echo "Running test: $test"
     pushd "$(dirname "$test")"
     if [[ ! -f Makefile ]]; then
@@ -73,8 +75,6 @@ do
     fi
     echo "travis_fold:end:runtest.sh.$INDEX"
 done
-
-set +x
 
 echo "RESULTS:"
 
