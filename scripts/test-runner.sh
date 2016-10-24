@@ -25,7 +25,7 @@ OS_TYPE="$1"
 OS_VERSION="$2"
 COMPONENT="$3"
 
-fold_start("machine-setup")
+fold_start "machine-setup"
 yum -y makecache
 # epel-release is not available on fedora
 if [[ $OS_TYPE != "fedora" ]]; then
@@ -44,14 +44,14 @@ SKIPPED=()
 
 export PATH=${PATH}:/workspace/scripts
 
-fold_end("machine-setup")
+fold_end "machine-setup"
 
 # Just beautiful
 for test in $(find /workspace -type f ! -path "*/Library/*" \
                               -path "*/$COMPONENT/*" -name "runtest.sh");
 do
     ((INDEX++))
-    fold_start("runtest.sh.$INDEX")
+    fold_start "runtest.sh.$INDEX"
     SKIP=0
 
     echo "Running test: $test"
@@ -90,7 +90,8 @@ do
     else
         SKIPPED+=("$test")
     fi
-    fold_end("runtest.sh.$INDEX")
+
+    fold_end "runtest.sh.$INDEX"
 done
 
 echo "RESULTS:"
