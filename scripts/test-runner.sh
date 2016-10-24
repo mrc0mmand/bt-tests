@@ -33,7 +33,7 @@ export PATH=${PATH}:/workspace/scripts
 echo "travis_fold:end:machine-setup"
 
 # Just beautiful
-for test in $(find /workspace -type f ! -path "*/Library/*"
+for test in $(find /workspace -type f ! -path "*/Library/*" \
                               -path "*/$COMPONENT/*" -name "runtest.sh");
 do
     echo "travis_fold:start:runtest.sh.$INDEX"
