@@ -2,13 +2,14 @@
 
 set +x
 
-if [[ $# < 2 ]]; then
+if [[ $# < 3 ]]; then
     echo >&2 "Missing arguments"
     exit 1
 fi
 
 OS_TYPE="$1"
 OS_VERSION="$2"
+COMPONENT="$3"
 
 echo "travis_fold:start:machine-setup"
 yum -y makecache
@@ -31,7 +32,9 @@ export PATH=${PATH}:/workspace/scripts
 
 echo "travis_fold:end:machine-setup"
 
-for test in $(find /workspace -type f ! -path "*/Library/*" -name "runtest.sh");
+# Just beautiful
+for test in $(find /workspace -type f ! -path "*/Library/*"
+                              -path "*/$COMPONENT/*" -name "runtest.sh");
 do
     echo "travis_fold:start:runtest.sh.$INDEX"
     SKIP=0
