@@ -78,7 +78,7 @@ do
                     print m[1];
                 }' Makefile)"
             if [[ ! -z $DEPS ]]; then
-                yum -y install $DEPS
+                $PKG_MAN -y install $DEPS
             fi
             # Works only for beakerlib tests
             make run
