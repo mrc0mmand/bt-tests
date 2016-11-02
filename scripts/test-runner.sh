@@ -16,7 +16,7 @@ function fold_end() {
 
 function keep_alive() {
     while true; do
-        echo "[KeepAlive] IGNORE"
+        echo "[KEEPALIVE] $(date)"
         sleep 300
     done
 }
