@@ -518,6 +518,8 @@ rlJournalStart
       done
 
     # looks like strsclnt can't handle client certificates with OpenSSL
+    # BZ#1397472 (rhel7), BZ#1397482 (rhel6)
+    # TODO: Remove when the issue is fixed
     if false; then
       for sess in sessionID ticket; do
         rlPhaseStartTest "OpenSSL server NSS client ${C_NAME[$j]} cipher $prot protocol client auth $sess resumption"
@@ -737,7 +739,16 @@ rlJournalStart
             rlRun "rm -rf nssdb/" 0 "Clean up NSS database"
         rlPhaseEnd
 
+    # Resumption does not work with DHE_DSS ciphersuites
+    #   - it should work with session IDs
+    # BZ#1397365 (rhel7), BZ#1397478 (rhel6)
+    # TODO: Remove when the issue is fixed
+    if [[ ! ${C_NAME[$j]} =~ "DHE_DSS" ]]; then
     for sess in sessionID ticket; do
+        # selfserv segfaults with ECDHE_ECDSA ciphersuites
+        # BZ#1397410 (rhel7), BZ#1397486 (rhel6)
+        # TODO: Remove when the issue is fixed
+        if ! [[ $sess == "ticket" && ${C_NAME[$j]} =~ "ECDHE_ECDSA" ]]; then
         rlPhaseStartTest "NSS server OpenSSL client ${C_NAME[$j]} cipher $prot protocol $sess resumption"
             rlLogInfo "Preparing NSS database"
             rlRun "mkdir nssdb/"
@@ -786,6 +797,7 @@ rlJournalStart
             fi
             rlRun "rm -rf nssdb/" 0 "Clean up NSS database"
         rlPhaseEnd
+        fi
     done
 
     for sess in sessionID ticket; do
@@ -839,6 +851,7 @@ rlJournalStart
             rlRun "rm -rf nssdb/" 0 "Clean up NSS database"
         rlPhaseEnd
     done
+    fi
 
       done
     done
