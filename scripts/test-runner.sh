@@ -47,8 +47,13 @@ if [[ $OS_TYPE != "fedora" ]]; then
     $PKG_MAN -y install epel-release
 fi
 
+# TEMPORARY WORKAROUND
+# TODO: Remove when a fixed official beakerlib version is released
+yum -y install https://sumsal.cz/dev/beakerlib-1.11centos-99.fc23.noarch.rpm
+# TODO: Add 'beakerlib' package to the yum below when removing the yum above
+
 # Install necessary packages/dependencies
-$PKG_MAN -y install net-tools coreutils gawk expect make beakerlib findutils \
+$PKG_MAN -y install net-tools coreutils gawk expect make findutils \
                     procps-ng
 
 EC=0
