@@ -48,8 +48,14 @@ if [[ $OS_TYPE != "fedora" ]]; then
 fi
 
 # Install necessary packages/dependencies
-$PKG_MAN -y install net-tools coreutils gawk expect make beakerlib findutils \
+$PKG_MAN -y install net-tools coreutils gawk expect make findutils \
                     procps-ng
+
+if [[ $OS_TYPE == "fedora" ]]; then
+    $PKG_MAN --enablerepo updates-testing -y install beakerlib
+else
+    $PKG_MAN --enablerepo epel-testing -y install beakerlib
+fi
 
 # WORKAROUND: Replace all rlIsRHEL calls with rlIsCentos
 if [[ $OS_TYPE == "centos" ]]; then
