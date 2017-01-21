@@ -342,7 +342,7 @@ rlJournalStart
         if [[ $prot == "tls1_1" ]] && [[ ${C_TLS1_2_ONLY[$j]} == "True" ]]; then
             continue
         fi
-
+if false; then
         rlPhaseStartTest "OpenSSL server NSS client ${C_NAME[$j]} cipher $prot protocol"
             options=(openssl s_server -www -key ${C_KEY[$j]})
             options+=(-cert ${C_CERT[$j]})
@@ -611,7 +611,9 @@ rlJournalStart
             fi
             rlRun "rm -rf nssdb/" 0 "Clean up NSS database"
         rlPhaseEnd
+fi
 
+while true; do
         rlPhaseStartTest "NSS server OpenSSL client ${C_NAME[$j]} cipher $prot protocol client auth"
             rlLogInfo "Preparing NSS database"
             rlRun "mkdir nssdb/"
@@ -653,7 +655,8 @@ rlJournalStart
             fi
             rlRun "rm -rf nssdb/" 0 "Clean up NSS database"
         rlPhaseEnd
-
+done
+if false; then
         rlPhaseStartTest "NSS server OpenSSL client ${C_NAME[$j]} cipher $prot protocol renegotiation"
             rlLogInfo "Preparing NSS database"
             rlRun "mkdir nssdb/"
@@ -845,6 +848,7 @@ rlJournalStart
             rlRun "rm -rf nssdb/" 0 "Clean up NSS database"
         rlPhaseEnd
     done
+fi
 
       done
     done

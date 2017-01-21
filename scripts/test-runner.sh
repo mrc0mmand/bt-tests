@@ -82,7 +82,6 @@ SKIPPED=()
 export PATH=${PATH}:/workspace/scripts
 
 fold_end "machine-setup"
-keep_alive &
 
 # Just beautiful
 for test in $(find /workspace -type f ! -path "*/Library/*" \
