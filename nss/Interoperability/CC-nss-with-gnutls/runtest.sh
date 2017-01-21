@@ -558,7 +558,7 @@ rlJournalStart
             else
                 options+=(-V tls1.0:tls1.1)
             fi
-            rlRun -s "expect nss-client.expect ${options[*]}"
+            rlRun -s "expect -d nss-client.expect ${options[*]}"
             rlAssertGrep "GET / HTTP/1.0" "$rlRun_LOG"
             rlAssertGrep "HTTP/1.0 200 OK" "$rlRun_LOG"
             rlRun "kill $openssl_pid"
@@ -590,7 +590,7 @@ rlJournalStart
             else
                 options+=(-n ${C_KEY[$j]%%/*})
             fi
-            rlRun "expect nss-server.expect ${options[*]} >server.log 2>server.err &"
+            rlRun "expect -d nss-server.expect ${options[*]} >server.log 2>server.err &"
             nss_pid=$!
             rlRun "rlWaitForSocket 4433 -p $nss_pid"
             options=(gnutls-cli)
@@ -601,7 +601,7 @@ rlJournalStart
             else
                 options+=(--priority ${GNUTLS_PRIO})
             fi
-            rlRun -s "expect gnutls-client.expect ${options[*]}"
+            rlRun -s "expect -d gnutls-client.expect ${options[*]}"
             rlAssertGrep "GET / HTTP/1.0" $rlRun_LOG
             rlAssertGrep "Server: Generic Web Server" $rlRun_LOG
             rlRun "kill $nss_pid"
@@ -644,7 +644,7 @@ rlJournalStart
             else
                 options+=(-V tls1.0:tls1.1)
             fi
-            rlRun -s "expect nss-client.expect ${options[*]}"
+            rlRun -s "expect -d nss-client.expect ${options[*]}"
             rlAssertGrep "GET / HTTP/1.0" "$rlRun_LOG"
             rlAssertGrep "HTTP/1.0 200 OK" "$rlRun_LOG"
             rlRun "kill $openssl_pid"
@@ -680,7 +680,7 @@ rlJournalStart
             else
                 options+=(-n ${C_KEY[$j]%%/*})
             fi
-            rlRun "expect nss-server.expect ${options[*]} >server.log 2>server.err &"
+            rlRun "expect -d nss-server.expect ${options[*]} >server.log 2>server.err &"
             nss_pid=$!
             rlRun "rlWaitForSocket 4433 -p $nss_pid"
             options=(gnutls-cli)
@@ -693,7 +693,7 @@ rlJournalStart
             else
                 options+=(--priority ${GNUTLS_PRIO})
             fi
-            rlRun -s "expect gnutls-client.expect ${options[*]}"
+            rlRun -s "expect -d gnutls-client.expect ${options[*]}"
             rlAssertGrep "GET / HTTP/1.0" $rlRun_LOG
             rlAssertGrep "Server: Generic Web Server" $rlRun_LOG
             rlRun "kill $nss_pid"

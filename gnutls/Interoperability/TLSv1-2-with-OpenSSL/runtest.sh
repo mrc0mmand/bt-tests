@@ -372,7 +372,7 @@ rlJournalStart
             options+=(-key ${C_KEY[$j]} -cert ${C_CERT[$j]})
             options+=(-CAfile '<(cat $(x509Cert ca) ${C_SUBCA[$j]})')
             options+=(-cipher ${C_OPENSSL[$j]})
-            rlRun "expect openssl-server.expect ${options[*]} \
+            rlRun "expect -d openssl-server.expect ${options[*]} \
                    >server.log 2>server.err &"
             openssl_pid=$!
             rlRun "rlWaitForSocket 4433 -p $openssl_pid"
@@ -386,7 +386,7 @@ rlJournalStart
                 options+=(--priority ${GNUTLS_PRIO}:-VERS-TLS1.2)
             fi
             options+=(-p 4433 localhost)
-            rlRun -s "expect gnutls-client.expect ${options[*]}"
+            rlRun -s "expect -d gnutls-client.expect ${options[*]}"
             rlAssertGrep "client hello" $rlRun_LOG
             rlAssertGrep "server hello" $rlRun_LOG
             if [[ $prot == tls1_1 ]]; then
@@ -419,7 +419,7 @@ rlJournalStart
             if [[ $prot == tls1_1 ]]; then
                 options+=(-no_tls1_2)
             fi
-            rlRun -s "expect openssl-client.expect ${options[*]}"
+            rlRun -s "expect -d openssl-client.expect ${options[*]}"
             rlAssertGrep "client hello" $rlRun_LOG
             rlRun "[[ $(grep 'client hello' $rlRun_LOG | wc -l) -eq 2 ]]" 0 \
                 "Check if server echo'ed back our message"
@@ -442,7 +442,7 @@ rlJournalStart
             options+=(-CAfile '<(cat $(x509Cert ca) ${C_SUBCA[$j]})')
             options+=(-cipher ${C_OPENSSL[$j]})
             options+=(-Verify 1)
-            rlRun "expect openssl-server.expect ${options[*]} \
+            rlRun "expect -d openssl-server.expect ${options[*]} \
                    >server.log 2>server.err &"
             openssl_pid=$!
             rlRun "rlWaitForSocket 4433 -p $openssl_pid"
@@ -458,7 +458,7 @@ rlJournalStart
                 options+=(--priority ${GNUTLS_PRIO}:-VERS-TLS1.2)
             fi
             options+=(-p 4433 localhost)
-            rlRun -s "expect gnutls-client.expect ${options[*]}"
+            rlRun -s "expect -d gnutls-client.expect ${options[*]}"
             rlAssertGrep "client hello" $rlRun_LOG
             rlAssertGrep "server hello" $rlRun_LOG
             if [[ $prot == tls1_1 ]]; then
@@ -499,7 +499,7 @@ rlJournalStart
             if [[ $prot == tls1_1 ]]; then
                 options+=(-no_tls1_2)
             fi
-            rlRun -s "expect openssl-client.expect ${options[*]}"
+            rlRun -s "expect -d openssl-client.expect ${options[*]}"
             rlAssertGrep "client hello" $rlRun_LOG
             rlRun "[[ $(grep 'client hello' $rlRun_LOG | wc -l) -eq 2 ]]" 0 \
                 "Check if server echo'ed back our message"
