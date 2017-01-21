@@ -3,10 +3,12 @@ set timeout 15
 spawn /bin/sh -c "$argv"
 expect {
     "Enter Password" { send "RedHatEnterpriseLinux6.6\r"; exp_continue }
-    eof { }
+    eof { puts "NSS GOT EOF" }
     "client hello" { send "server hello\r";
                    close}
 }
+puts "NSS BEFORE WAIT"
 set info [wait]
-#puts "Return from wait: $info"
+puts "NSS AFTER WAIT"
+puts "Return from wait: $info"
 exit [lindex $info 3]
