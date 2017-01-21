@@ -645,7 +645,9 @@ while true; do
                 options+=(-tls1_1)
             fi
             rlRun -s "expect -d openssl-client.expect ${options[*]}"
+            echo "AFTER OPENSSL EXPECT"
             rlAssertGrep "GET / HTTP/1.0" "$rlRun_LOG"
+            echo "AFTER FIRST GREP"
             rlAssertGrep "Server: Generic Web Server" "$rlRun_LOG"
             rlRun "kill $nss_pid"
             rlRun "rlWait -s SIGKILL $nss_pid" 143
