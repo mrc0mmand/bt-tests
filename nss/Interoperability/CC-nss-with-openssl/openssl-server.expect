@@ -1,4 +1,4 @@
-#!/usr/bin/expect
+#!/usr/bin/expect -d
 set timeout 30
 spawn /bin/sh -c "$argv"
 expect {
