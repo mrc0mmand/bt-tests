@@ -54,6 +54,7 @@ $(METADATA): Makefile
 	@echo "TestTime:        10m" >> $(METADATA)
 	@echo "RunFor:          gnutls nss" >> $(METADATA)
 	@echo "Requires:        gnutls gnutls-utils nss nss-tools expect" >> $(METADATA)
+	@echo "RhtsRequires:    library(openssl/certgen)" >> $(METADATA)
 	@echo "Priority:        Normal" >> $(METADATA)
 	@echo "License:         GPLv2" >> $(METADATA)
 	@echo "Confidential:    no" >> $(METADATA)
