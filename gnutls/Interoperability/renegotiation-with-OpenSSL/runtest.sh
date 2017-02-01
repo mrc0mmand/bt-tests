@@ -389,7 +389,7 @@ rlJournalStart
                 gnutls_pid=$!
                 rlRun "rlWaitForSocket -p $gnutls_pid 4433"
 
-                # OpenSSL server setup
+                # OpenSSL client setup
                 options=(openssl s_client -connect localhost:4433)
                 options+=(-CAfile $(x509Cert ca))
                 options+=(-cipher ${C_OPENSSL[$idx]})
@@ -414,7 +414,7 @@ rlJournalStart
                 gnutls_pid=$!
                 rlRun "rlWaitForSocket -p $gnutls_pid 4433"
 
-                # OpenSSL server setup
+                # OpenSSL client setup
                 options=(openssl s_client -connect localhost:4433)
                 options+=(-CAfile $(x509Cert ca))
                 options+=(-cert ${C_CLNT_CERT[$idx]} -key ${C_CLNT_KEY[$idx]})
