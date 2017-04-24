@@ -8,10 +8,18 @@ function confirmation() {
     fi
 }
 
-if [[ $# -eq 0 ]]; then
-    echo "Usage: $0 commit commit commit ..."
+if [[ $# -lt 2 ]]; then
+    echo "Usage: $0 component source_dir commit commit commit ..."
     exit 1
 fi
+
+set -e
+
+COMPONENT="$1" && shift
+SOURCE_DIR="$1" && shift
+ORIGIN_DIR="$(pwd)"
+
+pushd "$SOURCE_DIR"
 
 GIT_ROOT="$(basename $(git rev-parse --show-toplevel))"
 if [[ "$GIT_ROOT" =~ (openssl|nss|gnutls) ]]; then
@@ -20,25 +28,40 @@ else
     GIT_TYPE="upstream"
 fi
 
+echo -e "Selected component: \e[1m$COMPONENT\e[0m"
 echo -e "git root directory is '$GIT_ROOT' which is \e[1m$GIT_TYPE\e[0m"
 confirmation "Is this information correct?"
 if [[ "$GIT_TYPE" == "downstream" ]]; then
     echo "This directory will be used as a component name for a path substitution"
     confirmation "Is this setup OK?"
+    if [[ "$GIT_ROOT" != "$COMPONENT" ]]; then
+        echo >&2 "Downstream repository is for component $GIT_ROOT, but the" \
+                 "selected component is $COMPONENT"
+        exit 1
+    fi
 fi
 
 echo "Requested patches for following commits:"
-git show -s --oneline $@
+git --no-pager show -s --oneline $@
 
 echo "-------------------"
 
-for commit in "$@"; do
-    echo "Generating patch for $commit"
-    patch="$(git format-patch -1 $commit)"
+set +e
+
+# Generate patches
+
+TEMP_PATCH_DIR="$(mktemp -d "$ORIGIN_DIR/git-migrate.XXXXXX")"
+if [[ ! -d $TEMP_PATCH_DIR ]]; then
+    echo >&2 "Failed to create a temporary dir"
+    exit 1
+fi
+
+for patch in $(git format-patch $@); do
+    echo "Generating patch $patch"
     if [[ $? -eq 0 && -n $patch ]]; then
         tmpfile="$(mktemp)"
         mv "$patch" "$tmpfile"
-        awk -v dstr_comp="$GIT_ROOT" '
+        awk -v dstr_comp="$GIT_ROOT" -v target_comp="$COMPONENT" '
         function bold(text) {
             return "\033[1m" text "\033[0m";
         }
@@ -53,7 +76,11 @@ for commit in "$@"; do
         # --- a/openssl/Interoperability/CC-openssl-with-gnutls/runtest.sh
         # +++ b/openssl/Interoperability/CC-openssl-with-gnutls/runtest.sh
         match($0, /^[+-]{3} [ab]\/([^\/]+)\/.+$/, m) {
-            if(m[1] ~ /(openssl|nss|gnutls)/) {
+            if(m[1] ~ /^(openssl|nss|gnutls)$/) {
+                if(m[1] != target_comp) {
+                    print "Skipping commit (target: " target_comp ", commit: " m[1] ")" > "/dev/stderr"
+                    exit 1
+                }
                 # First path component is a component name => upstream repo
                 # Supported components: openssl, nss, gnutls
                 print "Found an " bold("upstream") " path: " green($0) > "/dev/stderr"
@@ -75,9 +102,22 @@ for commit in "$@"; do
             print $0;
         }
         ' "$tmpfile" > "$patch"
-        echo "Patch saved as $patch"
+        if [[ $? -ne 0 ]]; then
+            rm $patch
+        else
+            echo "Patch saved as $patch"
+        fi
         rm "$tmpfile"
+        mv "$patch" "$TEMP_PATCH_DIR/"
     else
         echo >&2 "git format-patch failed: ($patch)"
     fi
 done
+
+echo "Patches were saved in $TEMP_PATCH_DIR"
+
+# TODO: Apply patches
+
+popd
+
+exit 0
