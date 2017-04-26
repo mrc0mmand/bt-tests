@@ -1,20 +1,29 @@
 #!/usr/bin/bash
 
+# $1 - confirmation message
+# $2 - exit on confirmation (0: no, 1: yes, default: 1)
 function confirmation() {
-    read -p "$1 (y/n)" -n 1 -r
+    read -p "$1 (y/n)" -r
     echo
     if ! [[ $REPLY =~ ^[Yy]$ ]]; then
-        exit 1
+        if [[ ! -z $2 ]] && [[ $2 == 0 ]]; then
+            return 1
+        else
+            exit 1
+        fi
     fi
+
+    return 0
 }
 
 function finish_cleanup() {
     if [[ -d $TEMP_PATCH_DIR ]]; then
+        echo >&2 "Removing temporary directory with patches..."
         rm -fr "$TEMP_PATCH_DIR"
     fi
 }
 
-if [[ $# -lt 2 ]]; then
+if [[ $# -lt 4 ]]; then
     echo "Usage: $0 component source_dir dest_dir commit commit commit ..."
     exit 1
 fi
@@ -143,7 +152,6 @@ done
 echo "Patches were saved in $TEMP_PATCH_DIR"
 
 # TODO: Apply patches
-set -e
 
 popd
 
@@ -152,14 +160,21 @@ echo -e "\nApplying patches\n---------------"
 pushd "$DEST_DIR"
 
 for patch in ${GENERATED_PATCHES[@]}; do
-    echo "PATCH: $patch"
-    # Check if a patch was already applied
+    # Print patch summary
+    awk 'match($0, /^Subject: (.+)$/, m) { print m[1]; exit 0 }' < "$patch"
+    git apply --stat "$patch"
+    # Ask user if they want to apply this patch, if not, skip it
+    if ! confirmation "Apply this patch?"; then
+        continue
+    fi
+    # Check if the patch was already applied, if not, apply it
     if ! git apply --check -R < "$patch" &> /dev/null; then
-        git am < "$patch"
+        if ! git am  < "$patch"; then
+            confirmation "Patch failed. Do you want to continue?"
+        fi
     else
         echo "Patch $(basename $patch) is already applied, skipping..."
     fi
 done
-
 
 exit 0
